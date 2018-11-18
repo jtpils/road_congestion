@@ -25,7 +25,7 @@ for i=1:1:24
     %% Считываем изображение
     num = i;
     number = num2str(num);
-    rgbImage = imread(strcat(dir,number,format)); 
+    rgbImage = imread(strcat(dir,number,format));
     % Под каждый кадр выводим фигуру с именем - путь к файлу
     figure
     set(gcf,'name',['Изображение ' strcat(dir,number,format)],'numbertitle','off');
@@ -46,7 +46,7 @@ for i=1:1:24
     % Отображение фигуры на фулскрин
     set(gcf, 'Position', get(0, 'ScreenSize'));
 
-    
+
 
     %% Разобьем на цветовые потоки.
     redBand = rgbImage(:,:, 1);
@@ -66,7 +66,7 @@ for i=1:1:24
         % Комбиним маски чтобы найти участки где все они выполнились
         redObjectsMask = uint8(redMask & greenMask & blueMask);
         subplot(2, 2, 2);
-        % Вычисляем площадь (кол-во пикселей) 
+        % Вычисляем площадь (кол-во пикселей)
         redsum = bwarea(redObjectsMask);
         % Дополним каналы ( уберем с исходного )
         redObjectsMaskColor = rgbImage;
@@ -95,7 +95,7 @@ for i=1:1:24
 
         % Комбиним маски чтобы найти участки где все они выполнились
         greenObjectsMask = uint8(redMask & greenMask & blueMask);
-        % Вычисляем площадь (кол-во пикселей) 
+        % Вычисляем площадь (кол-во пикселей)
         greensum = bwarea(greenObjectsMask);
         subplot(2, 2, 3);
         % Дополним каналы ( уберем с исходного )
@@ -125,7 +125,7 @@ for i=1:1:24
 
         % Комбиним маски чтобы найти участки где все они выполнились
         yellowObjectsMask = uint8(redMask & greenMask & blueMask);
-        % Вычисляем площадь (кол-во пикселей) 
+        % Вычисляем площадь (кол-во пикселей)
         yellowsum = bwarea(yellowObjectsMask);
         % Дополним каналы ( уберем с исходного )
         yellowObjectsMaskColor = rgbImage;
@@ -147,7 +147,7 @@ for i=1:1:24
      if ( (colorArrayArea(1,i,1)+colorArrayArea(2,i,1)+colorArrayArea(3,i,1)) > maxArea )
         maxArea = (colorArrayArea(1,i,1)+colorArrayArea(2,i,1)+colorArrayArea(3,i,1));
      end
-     
+
      %% Создадим необходимые директории
 %         У нас есть:
 %             rgbImage - исходное изображение
@@ -157,7 +157,7 @@ for i=1:1:24
 %             redObjectsMaskColor - RGB маска изображения с красными объектами
 %             greenObjectsMaskColor - RGB маска изображения с зелеными объектами
 %             yellowObjectsMaskColor - RGB маска изображения с желтыми объектами
-%    
+%
     %% FullScreen изображение
     source = strcat('Results Maps/Source image #',num2str(number));
     mkdir(source);
@@ -168,11 +168,11 @@ for i=1:1:24
     imwrite(greenObjectsMaskColor, strcat(source,'/Full screen image/greenObjectsMaskColor.jpg'));
     imwrite(yellowObjectsMaskColor, strcat(source,'/Full screen image/yellowObjectsMaskColor.jpg'));
     %% Запись FullScreen изображения в файл
-    fid = fopen(strcat(source,'/Full screen image/','AreaResult.txt'), 'w+'); 
-    fprintf(fid, 'Площадь занимаемая красным цветом = %6.2f\n', redsum); 
-    fprintf(fid, 'Площадь занимаемая зеленым цветом = %6.2f\n', greensum); 
-    fprintf(fid, 'Площадь занимаемая желтым цветом = %6.2f\n', yellowsum); 
-    fprintf(fid, 'Максимальная площадь дорог = %6.2f\n', maxArea); 
+    fid = fopen(strcat(source,'/Full screen image/','AreaResult.txt'), 'w+');
+    fprintf(fid, 'Площадь занимаемая красным цветом = %6.2f\n', redsum);
+    fprintf(fid, 'Площадь занимаемая зеленым цветом = %6.2f\n', greensum);
+    fprintf(fid, 'Площадь занимаемая желтым цветом = %6.2f\n', yellowsum);
+    fprintf(fid, 'Максимальная площадь дорог = %6.2f\n', maxArea);
     fclose(fid);
     %% Начало Cегментации
     rowPosition = 0;
@@ -206,11 +206,11 @@ for i=1:1:24
                 I2 = imcrop(yellowObjectsMask,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 yellowsumcrop = bwarea(I2);
                 % Запись в файл
-                fid = fopen(strcat(source,'/A',num2str(rowPosition),num2str(columnPostition),'/AreaResult.txt'), 'w+'); 
-                fprintf(fid, 'Площадь занимаемая красным цветом = %6.2f\n', redsumcrop); 
-                fprintf(fid, 'Площадь занимаемая зеленым цветом = %6.2f\n', greensumcrop); 
-                fprintf(fid, 'Площадь занимаемая желтым цветом = %6.2f\n', yellowsumcrop); 
-                fprintf(fid, 'Максимальная площадь дорог = %6.2f\n', maxArea); 
+                fid = fopen(strcat(source,'/A',num2str(rowPosition),num2str(columnPostition),'/AreaResult.txt'), 'w+');
+                fprintf(fid, 'Площадь занимаемая красным цветом = %6.2f\n', redsumcrop);
+                fprintf(fid, 'Площадь занимаемая зеленым цветом = %6.2f\n', greensumcrop);
+                fprintf(fid, 'Площадь занимаемая желтым цветом = %6.2f\n', yellowsumcrop);
+                fprintf(fid, 'Максимальная площадь дорог = %6.2f\n', maxArea);
                 fclose(fid);
                 % Шаг по столбцам
                 cropColumnPosition = cropColumnPosition + columnStep;
@@ -219,7 +219,7 @@ for i=1:1:24
             cropColumnPosition = 0;
             cropRowPosition = cropRowPosition + rowStep;
     end
-    
+
 end
 
 
@@ -236,7 +236,7 @@ axis( [ 1, 24, 0, 100 ] );
 % Сетка
 grid on;
 title(['Общая площадь дорог = ' num2str(maxArea)]);
-xlabel('Номер кадра в последовательности'); 
+xlabel('Номер кадра в последовательности');
 ylabel('% от общей площади дороги');
 legend('Red Area','Green Area','Yellow Area');
 
@@ -256,4 +256,4 @@ legend('Red Area','Green Area','Yellow Area');
 %             end
 %      end
 %      imshow(ObjectsMaskColor, []);
-% 
+%

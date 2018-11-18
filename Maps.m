@@ -1,18 +1,18 @@
 close all;
-% Массив для хранения 24 значений площадей цветов
-% Три строки (красный,зеленый,желтый) 24 столбца 1 размерность
+% РњР°СЃСЃРёРІ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ 24 Р·РЅР°С‡РµРЅРёР№ РїР»РѕС‰Р°РґРµР№ С†РІРµС‚РѕРІ
+% РўСЂРё СЃС‚СЂРѕРєРё (РєСЂР°СЃРЅС‹Р№,Р·РµР»РµРЅС‹Р№,Р¶РµР»С‚С‹Р№) 24 СЃС‚РѕР»Р±С†Р° 1 СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ
 colorArrayArea=zeros(3,24,1);
-% Максимальная площадь
+% РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РїР»РѕС‰Р°РґСЊ
 maxArea = 0;
-% Cчитываем изображение
+% CС‡РёС‚С‹РІР°РµРј РёР·РѕР±СЂР°Р¶РµРЅРёРµ
 dir = 'map/';
 format = '.jpg';
 
-%% Ввод
-numberOfSegments=input('Введите k (на сколько секций делить изображение, при 4 изображение будет представлять 16 сегментов A11,A21,...,A44) = ');
+%% Р’РІРѕРґ
+numberOfSegments=input('Р’РІРµРґРёС‚Рµ k (РЅР° СЃРєРѕР»СЊРєРѕ СЃРµРєС†РёР№ РґРµР»РёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ, РїСЂРё 4 РёР·РѕР±СЂР°Р¶РµРЅРёРµ Р±СѓРґРµС‚ РїСЂРµРґСЃС‚Р°РІР»СЏС‚СЊ 16 СЃРµРіРјРµРЅС‚РѕРІ A11,A21,...,A44) = ');
 
-%% Удалим в папке Result's все файлы
-disp('Очистка результирующей директории...');
+%% РЈРґР°Р»РёРј РІ РїР°РїРєРµ Result's РІСЃРµ С„Р°Р№Р»С‹
+disp('РћС‡РёСЃС‚РєР° СЂРµР·СѓР»СЊС‚РёСЂСѓСЋС‰РµР№ РґРёСЂРµРєС‚РѕСЂРёРё...');
 try
 rmdir('Results Maps/*','s');
 mkdir('Results Maps');
@@ -22,20 +22,20 @@ end
 
 
 for i=1:1:24
-    %% Считываем изображение
+    %% РЎС‡РёС‚С‹РІР°РµРј РёР·РѕР±СЂР°Р¶РµРЅРёРµ
     num = i;
     number = num2str(num);
     rgbImage = imread(strcat(dir,number,format));
-    % Под каждый кадр выводим фигуру с именем - путь к файлу
+    % РџРѕРґ РєР°Р¶РґС‹Р№ РєР°РґСЂ РІС‹РІРѕРґРёРј С„РёРіСѓСЂСѓ СЃ РёРјРµРЅРµРј - РїСѓС‚СЊ Рє С„Р°Р№Р»Сѓ
     figure
-    set(gcf,'name',['Изображение ' strcat(dir,number,format)],'numbertitle','off');
-    %% Покажем исходное изображение.
+    set(gcf,'name',['РР·РѕР±СЂР°Р¶РµРЅРёРµ ' strcat(dir,number,format)],'numbertitle','off');
+    %% РџРѕРєР°Р¶РµРј РёСЃС…РѕРґРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ.
     subplot(2, 2, 1);
     imshow(rgbImage);
     title('Original RGB Image');
-    % Узнаем размер изображения
+    % РЈР·РЅР°РµРј СЂР°Р·РјРµСЂ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
     [row column color]=size(rgbImage);
-    %% Выведем размеры
+    %% Р’С‹РІРµРґРµРј СЂР°Р·РјРµСЂС‹
     str=sprintf('Row = %d',row);
     disp(str);
     str=sprintf('Column = %d',column);
@@ -43,19 +43,19 @@ for i=1:1:24
     str=sprintf('Color = %d',color);
     disp(str);
 
-    % Отображение фигуры на фулскрин
+    % РћС‚РѕР±СЂР°Р¶РµРЅРёРµ С„РёРіСѓСЂС‹ РЅР° С„СѓР»СЃРєСЂРёРЅ
     set(gcf, 'Position', get(0, 'ScreenSize'));
 
 
 
-    %% Разобьем на цветовые потоки.
+    %% Р Р°Р·РѕР±СЊРµРј РЅР° С†РІРµС‚РѕРІС‹Рµ РїРѕС‚РѕРєРё.
     redBand = rgbImage(:,:, 1);
     greenBand = rgbImage(:,:, 2);
     blueBand = rgbImage(:,:, 3);
-    %% Рассчет mask's
+    %% Р Р°СЃСЃС‡РµС‚ mask's
     %% Red
         redsum = 0;
-        % Для каждого потока устанавливаем порог.
+        % Р”Р»СЏ РєР°Р¶РґРѕРіРѕ РїРѕС‚РѕРєР° СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕСЂРѕРі.
         redthreshold = 68;
         greenThreshold = 70;
         blueThreshold = 72;
@@ -63,12 +63,12 @@ for i=1:1:24
         greenMask = (greenBand < greenThreshold);
         blueMask = (blueBand < blueThreshold);
 
-        % Комбиним маски чтобы найти участки где все они выполнились
+        % РљРѕРјР±РёРЅРёРј РјР°СЃРєРё С‡С‚РѕР±С‹ РЅР°Р№С‚Рё СѓС‡Р°СЃС‚РєРё РіРґРµ РІСЃРµ РѕРЅРё РІС‹РїРѕР»РЅРёР»РёСЃСЊ
         redObjectsMask = uint8(redMask & greenMask & blueMask);
         subplot(2, 2, 2);
-        % Вычисляем площадь (кол-во пикселей)
+        % Р’С‹С‡РёСЃР»СЏРµРј РїР»РѕС‰Р°РґСЊ (РєРѕР»-РІРѕ РїРёРєСЃРµР»РµР№)
         redsum = bwarea(redObjectsMask);
-        % Дополним каналы ( уберем с исходного )
+        % Р”РѕРїРѕР»РЅРёРј РєР°РЅР°Р»С‹ ( СѓР±РµСЂРµРј СЃ РёСЃС…РѕРґРЅРѕРіРѕ )
         redObjectsMaskColor = rgbImage;
         for m=1:1:row
             for j=1:1:column
@@ -79,13 +79,13 @@ for i=1:1:24
                 end
             end
         end
-        % Выведем результат
+        % Р’С‹РІРµРґРµРј СЂРµР·СѓР»СЊС‚Р°С‚
         imshow(redObjectsMaskColor, []);
         title(['Red Objects Mask sum = ' num2str(redsum)]);
         colorArrayArea(1,i,1)=redsum;
     %% Green
         greensum = 0;
-        % Для каждого потока устанавливаем порог.
+        % Р”Р»СЏ РєР°Р¶РґРѕРіРѕ РїРѕС‚РѕРєР° СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕСЂРѕРі.
         redthreshold = 68;
         greenThreshold = 70;
         blueThreshold = 72;
@@ -93,12 +93,12 @@ for i=1:1:24
         greenMask = (greenBand > greenThreshold);
         blueMask = (blueBand < blueThreshold);
 
-        % Комбиним маски чтобы найти участки где все они выполнились
+        % РљРѕРјР±РёРЅРёРј РјР°СЃРєРё С‡С‚РѕР±С‹ РЅР°Р№С‚Рё СѓС‡Р°СЃС‚РєРё РіРґРµ РІСЃРµ РѕРЅРё РІС‹РїРѕР»РЅРёР»РёСЃСЊ
         greenObjectsMask = uint8(redMask & greenMask & blueMask);
-        % Вычисляем площадь (кол-во пикселей)
+        % Р’С‹С‡РёСЃР»СЏРµРј РїР»РѕС‰Р°РґСЊ (РєРѕР»-РІРѕ РїРёРєСЃРµР»РµР№)
         greensum = bwarea(greenObjectsMask);
         subplot(2, 2, 3);
-        % Дополним каналы ( уберем с исходного )
+        % Р”РѕРїРѕР»РЅРёРј РєР°РЅР°Р»С‹ ( СѓР±РµСЂРµРј СЃ РёСЃС…РѕРґРЅРѕРіРѕ )
         greenObjectsMaskColor = rgbImage;
         for m=1:1:row
             for j=1:1:column
@@ -109,13 +109,13 @@ for i=1:1:24
                 end
             end
         end
-        % Выведем результат
+        % Р’С‹РІРµРґРµРј СЂРµР·СѓР»СЊС‚Р°С‚
         imshow(greenObjectsMaskColor, []);
         title(['Green Objects Mask sum = ' num2str(greensum)]);
         colorArrayArea(2,i,1)=greensum;
     %% Yellow
         yellowsum = 0;
-        % Для каждого потока устанавливаем порог.
+        % Р”Р»СЏ РєР°Р¶РґРѕРіРѕ РїРѕС‚РѕРєР° СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРѕСЂРѕРі.
         redthreshold = 68;
         greenThreshold = 70;
         blueThreshold = 72;
@@ -123,11 +123,11 @@ for i=1:1:24
         greenMask = (greenBand > greenThreshold);
         blueMask = (blueBand < blueThreshold);
 
-        % Комбиним маски чтобы найти участки где все они выполнились
+        % РљРѕРјР±РёРЅРёРј РјР°СЃРєРё С‡С‚РѕР±С‹ РЅР°Р№С‚Рё СѓС‡Р°СЃС‚РєРё РіРґРµ РІСЃРµ РѕРЅРё РІС‹РїРѕР»РЅРёР»РёСЃСЊ
         yellowObjectsMask = uint8(redMask & greenMask & blueMask);
-        % Вычисляем площадь (кол-во пикселей)
+        % Р’С‹С‡РёСЃР»СЏРµРј РїР»РѕС‰Р°РґСЊ (РєРѕР»-РІРѕ РїРёРєСЃРµР»РµР№)
         yellowsum = bwarea(yellowObjectsMask);
-        % Дополним каналы ( уберем с исходного )
+        % Р”РѕРїРѕР»РЅРёРј РєР°РЅР°Р»С‹ ( СѓР±РµСЂРµРј СЃ РёСЃС…РѕРґРЅРѕРіРѕ )
         yellowObjectsMaskColor = rgbImage;
         for m=1:1:row
             for j=1:1:column
@@ -138,84 +138,84 @@ for i=1:1:24
                 end
             end
         end
-        % Выведем результат
+        % Р’С‹РІРµРґРµРј СЂРµР·СѓР»СЊС‚Р°С‚
         subplot(2, 2, 4);
         imshow(yellowObjectsMaskColor, []);
         title(['Yellow Objects Mask sum = ' num2str(yellowsum)]);
         colorArrayArea(3,i,1)=yellowsum;
-        % Вычисляем максимальную площадь дорог на всех кадрах
+        % Р’С‹С‡РёСЃР»СЏРµРј РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РїР»РѕС‰Р°РґСЊ РґРѕСЂРѕРі РЅР° РІСЃРµС… РєР°РґСЂР°С…
      if ( (colorArrayArea(1,i,1)+colorArrayArea(2,i,1)+colorArrayArea(3,i,1)) > maxArea )
         maxArea = (colorArrayArea(1,i,1)+colorArrayArea(2,i,1)+colorArrayArea(3,i,1));
      end
 
-     %% Создадим необходимые директории
-%         У нас есть:
-%             rgbImage - исходное изображение
-%             redObjectsMask - чб маска изображения с красными объектами
-%             greenObjectsMask - чб маска изображения с зелеными объектами
-%             yellowObjectsMask - чб маска изображения с желтыми объектами
-%             redObjectsMaskColor - RGB маска изображения с красными объектами
-%             greenObjectsMaskColor - RGB маска изображения с зелеными объектами
-%             yellowObjectsMaskColor - RGB маска изображения с желтыми объектами
+     %% РЎРѕР·РґР°РґРёРј РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґРёСЂРµРєС‚РѕСЂРёРё
+%         РЈ РЅР°СЃ РµСЃС‚СЊ:
+%             rgbImage - РёСЃС…РѕРґРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+%             redObjectsMask - С‡Р± РјР°СЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ РєСЂР°СЃРЅС‹РјРё РѕР±СЉРµРєС‚Р°РјРё
+%             greenObjectsMask - С‡Р± РјР°СЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ Р·РµР»РµРЅС‹РјРё РѕР±СЉРµРєС‚Р°РјРё
+%             yellowObjectsMask - С‡Р± РјР°СЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ Р¶РµР»С‚С‹РјРё РѕР±СЉРµРєС‚Р°РјРё
+%             redObjectsMaskColor - RGB РјР°СЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ РєСЂР°СЃРЅС‹РјРё РѕР±СЉРµРєС‚Р°РјРё
+%             greenObjectsMaskColor - RGB РјР°СЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ Р·РµР»РµРЅС‹РјРё РѕР±СЉРµРєС‚Р°РјРё
+%             yellowObjectsMaskColor - RGB РјР°СЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ Р¶РµР»С‚С‹РјРё РѕР±СЉРµРєС‚Р°РјРё
 %
-    %% FullScreen изображение
+    %% FullScreen РёР·РѕР±СЂР°Р¶РµРЅРёРµ
     source = strcat('Results Maps/Source image #',num2str(number));
     mkdir(source);
-    % Изображение целое
+    % РР·РѕР±СЂР°Р¶РµРЅРёРµ С†РµР»РѕРµ
     mkdir(strcat(source,'/Full screen image'));
     imwrite(rgbImage, strcat(source,'/Full screen image/rgb.jpg'));
     imwrite(redObjectsMaskColor, strcat(source,'/Full screen image/redObjectsMaskColor.jpg'));
     imwrite(greenObjectsMaskColor, strcat(source,'/Full screen image/greenObjectsMaskColor.jpg'));
     imwrite(yellowObjectsMaskColor, strcat(source,'/Full screen image/yellowObjectsMaskColor.jpg'));
-    %% Запись FullScreen изображения в файл
+    %% Р—Р°РїРёСЃСЊ FullScreen РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ С„Р°Р№Р»
     fid = fopen(strcat(source,'/Full screen image/','AreaResult.txt'), 'w+');
-    fprintf(fid, 'Площадь занимаемая красным цветом = %6.2f\n', redsum);
-    fprintf(fid, 'Площадь занимаемая зеленым цветом = %6.2f\n', greensum);
-    fprintf(fid, 'Площадь занимаемая желтым цветом = %6.2f\n', yellowsum);
-    fprintf(fid, 'Максимальная площадь дорог = %6.2f\n', maxArea);
+    fprintf(fid, 'РџР»РѕС‰Р°РґСЊ Р·Р°РЅРёРјР°РµРјР°СЏ РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј = %6.2f\n', redsum);
+    fprintf(fid, 'РџР»РѕС‰Р°РґСЊ Р·Р°РЅРёРјР°РµРјР°СЏ Р·РµР»РµРЅС‹Рј С†РІРµС‚РѕРј = %6.2f\n', greensum);
+    fprintf(fid, 'РџР»РѕС‰Р°РґСЊ Р·Р°РЅРёРјР°РµРјР°СЏ Р¶РµР»С‚С‹Рј С†РІРµС‚РѕРј = %6.2f\n', yellowsum);
+    fprintf(fid, 'РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РїР»РѕС‰Р°РґСЊ РґРѕСЂРѕРі = %6.2f\n', maxArea);
     fclose(fid);
-    %% Начало Cегментации
+    %% РќР°С‡Р°Р»Рѕ CРµРіРјРµРЅС‚Р°С†РёРё
     rowPosition = 0;
     columnPostition = 0;
     rowStep = row / numberOfSegments;
     columnStep = column / numberOfSegments;
     cropRowPosition = 0;
     cropColumnPosition = 0;
-    %% Расчет секции. где A[rowPosition,columnPostition] ( A11 ) равен пиксельно A[cropColumnPosition,cropRowPosition]
-    % !!! Участок A12 где 1 строка 2 столбец в матлаб матрицах будет А21
-    % где 2 столбец 1 строка
+    %% Р Р°СЃС‡РµС‚ СЃРµРєС†РёРё. РіРґРµ A[rowPosition,columnPostition] ( A11 ) СЂР°РІРµРЅ РїРёРєСЃРµР»СЊРЅРѕ A[cropColumnPosition,cropRowPosition]
+    % !!! РЈС‡Р°СЃС‚РѕРє A12 РіРґРµ 1 СЃС‚СЂРѕРєР° 2 СЃС‚РѕР»Р±РµС† РІ РјР°С‚Р»Р°Р± РјР°С‚СЂРёС†Р°С… Р±СѓРґРµС‚ Рђ21
+    % РіРґРµ 2 СЃС‚РѕР»Р±РµС† 1 СЃС‚СЂРѕРєР°
     for rowPosition=1:1:numberOfSegments
             for columnPostition=1:1:numberOfSegments
                 % RGB
                 mkdir(strcat(source,'/A',num2str(rowPosition),num2str(columnPostition)));
                 I2 = imcrop(rgbImage,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 imwrite(I2, strcat(source,'/A',num2str(rowPosition),num2str(columnPostition),'/rgb.jpg'));
-                % Красный
+                % РљСЂР°СЃРЅС‹Р№
                 I2 = imcrop(redObjectsMaskColor,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 imwrite(I2, strcat(source,'/A',num2str(rowPosition),num2str(columnPostition),'/redObjectsMaskColor.jpg'));
                 I2 = imcrop(redObjectsMask,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 redsumcrop = bwarea(I2);
-                % Зеленый
+                % Р—РµР»РµРЅС‹Р№
                 I2 = imcrop(greenObjectsMaskColor,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 imwrite(I2, strcat(source,'/A',num2str(rowPosition),num2str(columnPostition),'/greenObjectsMaskColor.jpg'));
                 I2 = imcrop(greenObjectsMask,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 greensumcrop = bwarea(I2);
-                % Желтый
+                % Р–РµР»С‚С‹Р№
                 I2 = imcrop(yellowObjectsMaskColor,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 imwrite(I2, strcat(source,'/A',num2str(rowPosition),num2str(columnPostition),'/yellowObjectsMaskColor.jpg'));
                 I2 = imcrop(yellowObjectsMask,[cropColumnPosition cropRowPosition columnStep rowStep]);
                 yellowsumcrop = bwarea(I2);
-                % Запись в файл
+                % Р—Р°РїРёСЃСЊ РІ С„Р°Р№Р»
                 fid = fopen(strcat(source,'/A',num2str(rowPosition),num2str(columnPostition),'/AreaResult.txt'), 'w+');
-                fprintf(fid, 'Площадь занимаемая красным цветом = %6.2f\n', redsumcrop);
-                fprintf(fid, 'Площадь занимаемая зеленым цветом = %6.2f\n', greensumcrop);
-                fprintf(fid, 'Площадь занимаемая желтым цветом = %6.2f\n', yellowsumcrop);
-                fprintf(fid, 'Максимальная площадь дорог = %6.2f\n', maxArea);
+                fprintf(fid, 'РџР»РѕС‰Р°РґСЊ Р·Р°РЅРёРјР°РµРјР°СЏ РєСЂР°СЃРЅС‹Рј С†РІРµС‚РѕРј = %6.2f\n', redsumcrop);
+                fprintf(fid, 'РџР»РѕС‰Р°РґСЊ Р·Р°РЅРёРјР°РµРјР°СЏ Р·РµР»РµРЅС‹Рј С†РІРµС‚РѕРј = %6.2f\n', greensumcrop);
+                fprintf(fid, 'РџР»РѕС‰Р°РґСЊ Р·Р°РЅРёРјР°РµРјР°СЏ Р¶РµР»С‚С‹Рј С†РІРµС‚РѕРј = %6.2f\n', yellowsumcrop);
+                fprintf(fid, 'РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РїР»РѕС‰Р°РґСЊ РґРѕСЂРѕРі = %6.2f\n', maxArea);
                 fclose(fid);
-                % Шаг по столбцам
+                % РЁР°Рі РїРѕ СЃС‚РѕР»Р±С†Р°Рј
                 cropColumnPosition = cropColumnPosition + columnStep;
             end
-            % Шаг по строкам и сброс столбцов в начало 0
+            % РЁР°Рі РїРѕ СЃС‚СЂРѕРєР°Рј Рё СЃР±СЂРѕСЃ СЃС‚РѕР»Р±С†РѕРІ РІ РЅР°С‡Р°Р»Рѕ 0
             cropColumnPosition = 0;
             cropRowPosition = cropRowPosition + rowStep;
     end
@@ -224,20 +224,20 @@ end
 
 
 
-%% График
+%% Р“СЂР°С„РёРє
 figure
-set(gcf,'name','График соотношения загруженности дорог в течении дня' ,'numbertitle','off');
+set(gcf,'name','Р“СЂР°С„РёРє СЃРѕРѕС‚РЅРѕС€РµРЅРёСЏ Р·Р°РіСЂСѓР¶РµРЅРЅРѕСЃС‚Рё РґРѕСЂРѕРі РІ С‚РµС‡РµРЅРёРё РґРЅСЏ' ,'numbertitle','off');
 x = 1:24;
 red = (colorArrayArea(1,x,1)/maxArea)*100;
 green = (colorArrayArea(2,x,1)/maxArea)*100;
 yellow = (colorArrayArea(3,x,1)/maxArea)*100;
 plot(x,red,'r-',x,green,'g-',x,yellow,'y-');
 axis( [ 1, 24, 0, 100 ] );
-% Сетка
+% РЎРµС‚РєР°
 grid on;
-title(['Общая площадь дорог = ' num2str(maxArea)]);
-xlabel('Номер кадра в последовательности');
-ylabel('% от общей площади дороги');
+title(['РћР±С‰Р°СЏ РїР»РѕС‰Р°РґСЊ РґРѕСЂРѕРі = ' num2str(maxArea)]);
+xlabel('РќРѕРјРµСЂ РєР°РґСЂР° РІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё');
+ylabel('% РѕС‚ РѕР±С‰РµР№ РїР»РѕС‰Р°РґРё РґРѕСЂРѕРіРё');
 legend('Red Area','Green Area','Yellow Area');
 
 
